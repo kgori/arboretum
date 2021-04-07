@@ -5,13 +5,6 @@
 #include "Hello.h"
 
 namespace Arbor {
-Hello::Hello() {
-
-}
-
-Hello::~Hello() {
-
-}
 
 std::string Hello::greet(const std::string& message) {
     return std::string("Hello, " + message + ", from Arboretum!");
