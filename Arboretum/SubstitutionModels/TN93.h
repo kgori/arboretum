@@ -82,19 +82,12 @@ public:
     TN93()
             : m_AlphaY(1.0), m_AlphaR(1.0), m_Beta(1.0), m_A(0.25), m_C(0.25), m_G(0.25), m_T(0.25) {
         double scale = tn93_scale(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta);
-        m_Q = tn93_q(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
-        m_Eigenvectors = tn93_evecs(m_A, m_C, m_G, m_T);
-        m_InverseEigenvectors = tn93_ivecs(m_A, m_C, m_G, m_T);
-        m_Eigenvalues = tn93_evals(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
+        initialise();
     }
 
     TN93(double alpha_y, double alpha_r, double beta, double a, double c, double g, double t)
             : m_AlphaY(alpha_y), m_AlphaR(alpha_r), m_Beta(beta), m_A(a), m_C(c), m_G(g), m_T(t) {
-        double scale = tn93_scale(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta);
-        m_Q = tn93_q(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
-        m_Eigenvectors = tn93_evecs(m_A, m_C, m_G, m_T);
-        m_InverseEigenvectors = tn93_ivecs(m_A, m_C, m_G, m_T);
-        m_Eigenvalues = tn93_evals(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
+        initialise();
     }
 
     inline const Matrix4 &Q() const override { return m_Q; };
@@ -102,6 +95,13 @@ public:
     inline const Matrix4 P(double time) const override;
 
 protected:
+    void initialise() {
+        double scale = tn93_scale(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta);
+        m_Q = tn93_q(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
+        m_Eigenvectors = tn93_evecs(m_A, m_C, m_G, m_T);
+        m_InverseEigenvectors = tn93_ivecs(m_A, m_C, m_G, m_T);
+        m_Eigenvalues = tn93_evals(m_A, m_C, m_G, m_T, m_AlphaY, m_AlphaR, m_Beta, scale);
+    }
     double m_AlphaY, m_AlphaR, m_Beta, m_A, m_C, m_G, m_T;
     Matrix4 m_Q, m_Eigenvectors, m_InverseEigenvectors;
     Vector4 m_Eigenvalues;

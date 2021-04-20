@@ -1,18 +1,35 @@
 //
 // Created by Kevin Gori on 07/04/2021.
 //
+#pragma once
 
 #include <array>
 #include "doctest.h"
-#pragma once
 
 namespace Arbor {
 // Aliases for 4x4 matrix and length-4 vector
-using Matrix4 = std::array<double, 16>;
-using Vector4 = std::array<double, 4>;
+template <typename T, size_t N> struct alignas(32) aligned_array : public std::array<T,N> {};
+using Matrix4 = aligned_array<double, 16>;
+using Vector4 = aligned_array<double, 4>;
 
 // Matrix multiply two 4x4 Matrices
 Matrix4 matmul(const Matrix4 &a, const Matrix4 &b);
+
+// Multiply 4x4 matrix with length-4 column vector
+Vector4 matmulvec(const Matrix4& m, const Vector4& v);
+
+// Component-wise multiply two vectors
+Vector4 operator*(const Vector4& v1, const Vector4& v2);
+
+// Matrix multiply two 4x4 matrix
+inline Matrix4 operator*(const Matrix4& m1, const Matrix4& m2) {
+    return matmul(m1, m2);
+}
+
+// Matrix multiply a 4x4 matrix with a length-4 column vector
+inline Vector4 operator*(const Matrix4& m, const Vector4& v) {
+    return matmulvec(m, v);
+}
 
 /* Perform the multiplication LVL-1, where L is a 4x4 matrix of eigenvectors,
  * V is a diagonal matrix of eigenvalues (represented by a 4-vector), and L-1
@@ -22,6 +39,9 @@ Matrix4 reconstitute_eigen(const Matrix4 &evecs, const Vector4 &diag, const Matr
 
 // Utility to print a matrix to std::cout
 void print_matrix(const Matrix4 &m);
+
+// Utility to print a vector to std::cout
+void print_vector(const Vector4 &v);
 }
 
 TEST_CASE("Testing reconstitute eigen") {

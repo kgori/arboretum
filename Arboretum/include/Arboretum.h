@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Hello.h"
+#include "../Maths/Matrix.h"
 #include "../SubstitutionModels/SubstitutionModels.h"
 #include "../SubstitutionModels/DNAModels.h"
 #include "doctest.h"
